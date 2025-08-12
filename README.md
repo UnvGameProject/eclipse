@@ -77,4 +77,3 @@ my_game/
 │   ├── __init__.py
 │   ├── math_utils.py     # Vector math, collision helpers
 │   ├── file_loader.py    # Asset loading utilities
-│   ├─

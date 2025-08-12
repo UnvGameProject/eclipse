@@ -8,7 +8,7 @@ def mainWindow():
     BLACK = (0, 0, 0)
 
     running = True
-    clock = pygame .time.clock()
+    clock = pygame.time.Clock()
 
     while running:
         for event in pygame.event.get():

@@ -1,23 +1,11 @@
-<<<<<<< HEAD
-/**
-=======
-import pygame
-
 import scenes.splashscreen.titlescreen as splash
 
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
->>>>>>> refs/remotes/origin/splashscreen
-
+#This is the main entry point to the program. Game starts here
 def main():
-    splash.mainWindow()
-
-
+    splash.mainWindow() # This is a usage to the mainWindow.
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     print("Hi")
     main()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/

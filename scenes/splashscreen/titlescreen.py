@@ -1,4 +1,6 @@
 import pygame
+
+from config import FONTS_PATH
 from ui.GameWindow import Scene
 
 
@@ -50,7 +52,7 @@ class CustomTitleScreen(TitleScreen):
 
     def __init__(self, screen_width, screen_height):
         # Use your specific font path here
-        font_path = "/Users/john/Documents/Coding_Projects/Games/eclipse/fonts/CosmicLove-O5Zp.ttf"
+        font_path = str(FONTS_PATH / "CosmicLove-O5Zp.ttf")
         super().__init__(screen_width, screen_height, "Eclipse", font_path, 95, (255, 255, 255))
 
         # You can customize timing here

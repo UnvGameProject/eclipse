@@ -34,7 +34,7 @@ def mainWindow():
     fade_surface = pygame.Surface((screen_width, screen_height))
     fade_surface.fill(BLACK)
 
-    # Fade control variables
+    # Fade control variables      
     alpha = 255  # start fully opaque (black screen covering text)
     fade_speed = 3  # how fast we fade (lower = slower)
     fade_is_done = False  # tracks if we've finished fading IN

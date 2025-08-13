@@ -14,20 +14,20 @@ def mainWindow():
     pygame.display.set_caption("Text Display Example")
 
     # Define colors
-    WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
+    WHITE = (255, 255, 255)
     BLUE = (0, 0, 255)
 
     # Create a font object using custom font
     try:
-        font = pygame.font.Font("/Users/john/Documents/Coding_Projects/Games/eclipse/fonts/CosmicLove-O5Zp.ttf", 36)
+        font = pygame.font.Font("/Users/john/Documents/Coding_Projects/Games/eclipse/fonts/CosmicLove-O5Zp.ttf", 95)
     except FileNotFoundError:
         print("Custom font not found, using default font")
-        font = pygame.font.Font(None, 36)
+        font = pygame.font.Font(None, 90)
 
     # Render the text
     text = "Eclipse"
-    text_surface = font.render(text, True, BLACK)  # True for anti-aliasing
+    text_surface = font.render(text, True, WHITE)  # True for anti-aliasing
 
     # Get text rectangle for positioning
     text_rect = text_surface.get_rect()
@@ -44,7 +44,7 @@ def mainWindow():
                 running = False
 
         # Fill the screen with white
-        screen.fill(WHITE)
+        screen.fill(BLACK)
 
         # Draw the text
         screen.blit(text_surface, text_rect)

@@ -1,5 +1,8 @@
+from time import sleep
+
 import pygame
 import sys
+
 
 def mainWindow():
     # Initialize pygame
@@ -17,7 +20,7 @@ def mainWindow():
 
     # Create a font object using custom font
     try:
-        font = pygame.font.Font("/home/brandon/projects/eclipse/fonts/CosmicLove-O5Zp.ttf", 36)
+        font = pygame.font.Font("/Users/john/Documents/Coding_Projects/Games/eclipse/fonts/CosmicLove-O5Zp.ttf", 95)
     except FileNotFoundError:
         print("Custom font not found, using default font")
         font = pygame.font.Font(None, 36)
@@ -30,8 +33,13 @@ def mainWindow():
     # Create a fade surface that covers the whole screen
     fade_surface = pygame.Surface((screen_width, screen_height))
     fade_surface.fill(BLACK)
-    alpha = 255          # start fully opaque
-    fade_speed = 3       # lower = slower fade
+
+    # Fade control variables
+    alpha = 255  # start fully opaque (black screen covering text)
+    fade_speed = 3  # how fast we fade (lower = slower)
+    fade_is_done = False  # tracks if we've finished fading IN
+    pause_timer = 0  # counts frames during the pause
+    pause_length = 300  # how long to pause (2 seconds at 60fps)
 
     # Main game loop
     running = True
@@ -49,11 +57,24 @@ def mainWindow():
         # Draw text
         screen.blit(text_surface, text_rect)
 
-        # Fade in by decreasing alpha until 0 (fully transparent)
-        if alpha > 0:
+        # STEP 1: Fade IN (make text visible)
+        if not fade_is_done:
+            # Make the black overlay more transparent each frame
             alpha -= fade_speed
-            if alpha < 0:
+            if alpha <= 0:
                 alpha = 0
+                fade_is_done = True  # fade in is complete
+        else:
+            # STEP 2: Pause (let people read the text)
+            if pause_timer < pause_length:
+                pause_timer += 1
+            else:
+                # STEP 3: Fade OUT (hide text again)
+                # Make the black overlay more opaque each frame
+                alpha += fade_speed
+                if alpha >= 255:
+                    alpha = 255
+
         fade_surface.set_alpha(alpha)
         screen.blit(fade_surface, (0, 0))
 

@@ -1,9 +1,7 @@
 import pygame
+import sys
 
 def mainWindow():
-    import pygame
-    import sys
-
     # Initialize pygame
     pygame.init()
 
@@ -16,22 +14,24 @@ def mainWindow():
     # Define colors
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
-    BLUE = (0, 0, 255)
 
     # Create a font object using custom font
     try:
-        font = pygame.font.Font("/Users/john/Documents/Coding_Projects/Games/eclipse/fonts/CosmicLove-O5Zp.ttf", 36)
+        font = pygame.font.Font("/home/brandon/projects/eclipse/fonts/CosmicLove-O5Zp.ttf", 36)
     except FileNotFoundError:
         print("Custom font not found, using default font")
         font = pygame.font.Font(None, 36)
 
-    # Render the text
+    # Render the text onto its own surface
     text = "Eclipse"
-    text_surface = font.render(text, True, BLACK)  # True for anti-aliasing
+    text_surface = font.render(text, True, WHITE)  # anti-aliased white text
+    text_rect = text_surface.get_rect(center=(screen_width // 2, screen_height // 2))
 
-    # Get text rectangle for positioning
-    text_rect = text_surface.get_rect()
-    text_rect.center = (screen_width // 2, screen_height // 2)  # Center the text
+    # Create a fade surface that covers the whole screen
+    fade_surface = pygame.Surface((screen_width, screen_height))
+    fade_surface.fill(BLACK)
+    alpha = 255          # start fully opaque
+    fade_speed = 3       # lower = slower fade
 
     # Main game loop
     running = True
@@ -43,13 +43,21 @@ def mainWindow():
             if event.type == pygame.QUIT:
                 running = False
 
-        # Fill the screen with white
-        screen.fill(WHITE)
+        # Draw background
+        screen.fill(BLACK)
 
-        # Draw the text
+        # Draw text
         screen.blit(text_surface, text_rect)
 
-        # Update the display
+        # Fade in by decreasing alpha until 0 (fully transparent)
+        if alpha > 0:
+            alpha -= fade_speed
+            if alpha < 0:
+                alpha = 0
+        fade_surface.set_alpha(alpha)
+        screen.blit(fade_surface, (0, 0))
+
+        # Update display
         pygame.display.flip()
 
         # Control frame rate

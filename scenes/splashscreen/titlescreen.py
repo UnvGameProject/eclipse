@@ -1,89 +1,71 @@
-from time import sleep
-
 import pygame
-import sys
+from ui.GameWindow import Scene
 
 
-def mainWindow():
-    # Initialize pygame
-    pygame.init()
+class TitleScreen(Scene):
+    """Title screen that displays text with fade in/out effect"""
 
-    # Set up the display
-    screen_width = 800
-    screen_height = 600
-    screen = pygame.display.set_mode((screen_width, screen_height))
-    pygame.display.set_caption("Text Display Example")
+    def __init__(self, screen_width, screen_height, text="Eclipse",
+                 font_path=None, font_size=95, text_color=(255, 255, 255)):
+        """
+        Create a title screen
+        Args:
+            screen_width, screen_height: Screen dimensions
+            text: Text to display
+            font_path: Path to custom font file (optional)
+            font_size: Size of the font
+            text_color: RGB tuple for text color
+        """
+        super().__init__(screen_width, screen_height)
 
-    # Define colors
-    WHITE = (255, 255, 255)
-    BLACK = (0, 0, 0)
+        self.text = text
+        self.text_color = text_color
 
-    # Create a font object using custom font
-    try:
-        font = pygame.font.Font("/Users/john/Documents/Coding_Projects/Games/eclipse/fonts/CosmicLove-O5Zp.ttf", 95)
-    except FileNotFoundError:
-        print("Custom font not found, using default font")
-        font = pygame.font.Font(None, 36)
-
-    # Render the text onto its own surface
-    text = "Eclipse"
-    text_surface = font.render(text, True, WHITE)  # anti-aliased white text
-    text_rect = text_surface.get_rect(center=(screen_width // 2, screen_height // 2))
-
-    # Create a fade surface that covers the whole screen
-    fade_surface = pygame.Surface((screen_width, screen_height))
-    fade_surface.fill(BLACK)
-
-    # Fade control variables      
-    alpha = 255  # start fully opaque (black screen covering text)
-    fade_speed = 3  # how fast we fade (lower = slower)
-    fade_is_done = False  # tracks if we've finished fading IN
-    pause_timer = 0  # counts frames during the pause
-    pause_length = 300  # how long to pause (2 seconds at 60fps)
-
-    # Main game loop
-    running = True
-    clock = pygame.time.Clock()
-
-    while running:
-        # Handle events
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-        # Draw background
-        screen.fill(BLACK)
-
-        # Draw text
-        screen.blit(text_surface, text_rect)
-
-        # STEP 1: Fade IN (make text visible)
-        if not fade_is_done:
-            # Make the black overlay more transparent each frame
-            alpha -= fade_speed
-            if alpha <= 0:
-                alpha = 0
-                fade_is_done = True  # fade in is complete
-        else:
-            # STEP 2: Pause (let people read the text)
-            if pause_timer < pause_length:
-                pause_timer += 1
+        # Try to load custom font, fall back to default
+        try:
+            if font_path:
+                self.font = pygame.font.Font(font_path, font_size)
             else:
-                # STEP 3: Fade OUT (hide text again)
-                # Make the black overlay more opaque each frame
-                alpha += fade_speed
-                if alpha >= 255:
-                    alpha = 255
+                self.font = pygame.font.Font(None, font_size)
+        except FileNotFoundError:
+            print(f"Font not found: {font_path}, using default font")
+            self.font = pygame.font.Font(None, font_size)
 
-        fade_surface.set_alpha(alpha)
-        screen.blit(fade_surface, (0, 0))
+        # Create the text surface (this is like "pre-rendering" the text)
+        self.text_surface = self.font.render(self.text, True, self.text_color)
 
-        # Update display
-        pygame.display.flip()
+        # Get rectangle for centering the text
+        self.text_rect = self.text_surface.get_rect(
+            center=(self.screen_width // 2, self.screen_height // 2)
+        )
 
-        # Control frame rate
-        clock.tick(60)
+    def draw_content(self, screen):
+        """Draw the title text on screen"""
+        screen.blit(self.text_surface, self.text_rect)
 
-    # Quit
-    pygame.quit()
-    sys.exit()
+
+# You can create other specific title screen types here
+class CustomTitleScreen(TitleScreen):
+    """Example of extending the basic title screen"""
+
+    def __init__(self, screen_width, screen_height):
+        # Use your specific font path here
+        font_path = "/Users/john/Documents/Coding_Projects/Games/eclipse/fonts/CosmicLove-O5Zp.ttf"
+        super().__init__(screen_width, screen_height, "Eclipse", font_path, 95, (255, 255, 255))
+
+        # You can customize timing here
+        self.pause_length = 240  # Display for 4 seconds (240 frames at 60fps)
+        self.fade_speed = 2  # Slower fade for dramatic effect
+
+
+class LevelIntroScreen(TitleScreen):
+    """Screen to introduce new levels"""
+
+    def __init__(self, screen_width, screen_height, level_number):
+        level_text = f"Level {level_number}"
+        super().__init__(screen_width, screen_height, level_text,
+                         font_size=60, text_color=(255, 255, 0))
+
+        # Quicker timing for level intros
+        self.pause_length = 120  # 2 seconds
+        self.fade_speed = 5  # Fast fade
